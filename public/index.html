@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VozPueblo — Denuncia Ciudadana</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- TICKER -->
+
+    <header>
+      <div class="header-ticker">
+        <span class="ticker-inner">
+          📍 ÚLTIMA HORA: Vecinos reportan puente deteriorado en camino Lata-Guamo.
+          &nbsp;|&nbsp; 🚧 Acumulación de aguas negras en sector La Podesta, San Juan.
+          &nbsp;|&nbsp; 💡 Alumbrado sin reparar desde hace 3 semanas en Barrio
+          Pueblo nuevo, Carmen de Bolivar &nbsp;|&nbsp; 🌊 Fuga de agua reportada en Calle 5, barrio Palmira, San Juan.
+          &nbsp;|&nbsp; 📍 ÚLTIMA HORA: Vecinos reportan bache peligroso en Av.
+          Principal km 3 &nbsp;|&nbsp; 🚧 Drenaje bloqueado en Col. Jardines — 5
+          votos de apoyo &nbsp;|&nbsp; 💡 Alumbrado sin reparar desde hace 3
+          semanas en Barrio Norte &nbsp;|&nbsp; 🌊 Fuga de agua reportada en
+          Calle 5 de Mayo &nbsp;|&nbsp;
+        </span>
+      </div>
+
+      <div class="header-main">
+        <div class="logo">
+          <span class="logo-eyebrow">Plataforma ciudadana de denuncia</span>
+          <div class="logo-name">Voz<span>Pueblo</span></div>
+          <div class="logo-tagline">
+            Porque tu comunidad merece ser escuchada
+          </div>
+        </div>
+        <div class="header-stats">
+          <div class="stat">
+            <span class="stat-num" id="stat-total">247</span>
+            <span class="stat-label">Denuncias</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" id="stat-resolved">89</span>
+            <span class="stat-label">Resueltas</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">12</span>
+            <span class="stat-label">Municipios</span>
+          </div>
+        </div>
+      </div>
+
+      <nav>
+        <a class="active" onclick="showSection('feed')">🗞 Denuncias</a>
+        <a onclick="showSection('form')">✍️ Denunciar ahora</a>
+        <a onclick="showSection('map')">🗺 Mapa</a>
+        <a onclick="showSection('how')">❓ Cómo funciona</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+
+    <div class="hero">
+      <div class="hero-text">
+        <h1>TU PUEBLO<em>NECESITA TU VOZ</em></h1>
+        <p>
+          Documenta los problemas de tu comunidad: calles en mal estado, basura
+          acumulada, fallas eléctricas, obras inconclusas y más. Con evidencias
+          reales que no se pueden ignorar.
+        </p>
+        <button class="btn-primary" onclick="showSection('form')">
+          📢 HACER UNA DENUNCIA
+        </button>
+      </div>
+      <div class="hero-categories">
+        <h2 class="echo-text">CATEGORIAS</h2>
+        <div class="grid-category">
+          <div class="cat-card" onclick="filterByCategory('Vialidad')">
+            <span class="cat-icon">🛣️</span>
+            <div class="cat-info">
+              <span class="cat-name">Vialidad</span>
+              <span class="cat-count">82 reportes</span>
+            </div>
+          </div>
+          <div class="cat-card" onclick="filterByCategory('Agua y Drenaje')">
+            <span class="cat-icon">💧</span>
+            <div class="cat-info">
+              <span class="cat-name">Agua y Drenaje</span>
+              <span class="cat-count">54 reportes</span>
+            </div>
+          </div>
+          <div class="cat-card" onclick="filterByCategory('Alumbrado')">
+            <span class="cat-icon">💡</span>
+            <div class="cat-info">
+              <span class="cat-name">Alumbrado</span>
+              <span class="cat-count">41 reportes</span>
+            </div>
+          </div>
+          <div class="cat-card" onclick="filterByCategory('Residuos')">
+            <span class="cat-icon">🗑️</span>
+            <div class="cat-info">
+              <span class="cat-name">Residuos</span>
+              <span class="cat-count">38 reportes</span>
+            </div>
+          </div>
+          <div class="cat-card" onclick="filterByCategory('Seguridad')">
+            <span class="cat-icon">🚨</span>
+            <div class="cat-info">
+              <span class="cat-name">Seguridad</span>
+              <span class="cat-count">19 reportes</span>
+            </div>
+          </div>
+          <div class="cat-card" onclick="filterByCategory('Otro')">
+            <span class="cat-icon">📋</span>
+            <div class="cat-info">
+              <span class="cat-name">Otros</span>
+              <span class="cat-count">13 reportes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED SECTION -->
+
+    <section class="section" id="feed-section">
+      <div class="section-label">ÚLTIMAS DENUNCIAS</div>
+      <div class="section-title">Lo que reporta tu comunidad</div>
+
+      <div class="feed-controls">
+        <button class="filter-btn active" onclick="filterFeed(this, 'all')">
+          Todas
+        </button>
+        <button class="filter-btn" onclick="filterFeed(this, 'high')">
+          🔴 Urgentes
+        </button>
+        <button class="filter-btn" onclick="filterFeed(this, 'medium')">
+          🟡 Media
+        </button>
+        <button class="filter-btn" onclick="filterFeed(this, 'low')">
+          🟢 Baja
+        </button>
+        <button class="filter-btn" onclick="filterFeed(this, 'pending')">
+          Pendientes
+        </button>
+        <button class="filter-btn" onclick="filterFeed(this, 'resolved')">
+          Resueltas
+        </button>
+        <div class="feed-search">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar denuncia..."
+            oninput="searchReports()"
+          />
+          <button>🔍</button>
+        </div>
+      </div>
+
+      <div class="feed-grid" id="feed-grid">
+        <!-- cards inyectadas por JS -->
+      </div>
+    </section>
+
+    <!-- FORM SECTION -->
+
+    <section class="section" id="form-section" style="display: none">
+      <div class="section-label">HACER DENUNCIA</div>
+      <div class="section-title">Registra el problema</div>
+
+      <div class="form-layout">
+        <div class="wrapper-content">
+          <!-- CATEGORÍA -->
+          <div class="form-group">
+            <label>Categoría del problema *</label>
+            <div class="category-picker" id="cat-picker">
+              <div
+                class="cat-option selected"
+                onclick="selectCat(this, 'Vialidad')"
+              >
+                <span class="co-icon">🛣️</span
+                ><span class="co-name">Vialidad</span>
+              </div>
+              <div
+                class="cat-option"
+                onclick="selectCat(this, 'Agua y Drenaje')"
+              >
+                <span class="co-icon">💧</span><span class="co-name">Agua</span>
+              </div>
+              <div class="cat-option" onclick="selectCat(this, 'Alumbrado')">
+                <span class="co-icon">💡</span
+                ><span class="co-name">Alumbrado</span>
+              </div>
+              <div class="cat-option" onclick="selectCat(this, 'Residuos')">
+                <span class="co-icon">🗑️</span
+                ><span class="co-name">Residuos</span>
+              </div>
+              <div class="cat-option" onclick="selectCat(this, 'Seguridad')">
+                <span class="co-icon">🚨</span
+                ><span class="co-name">Seguridad</span>
+              </div>
+              <div class="cat-option" onclick="selectCat(this, 'Otro')">
+                <span class="co-icon">📋</span><span class="co-name">Otro</span>
+              </div>
+            </div>
+            <input type="hidden" id="selected-cat" value="Vialidad" />
+          </div>
+
+          <!-- TITULO -->
+          <div class="form-group">
+            <label>Título de la denuncia *</label>
+            <input
+              type="text"
+              id="report-title"
+              placeholder="Ej: Bache enorme en Calle Reforma #45"
+              maxlength="100"
+            />
+          </div>
+
+          <!-- DESCRIPCION -->
+          <div class="form-group">
+            <label>Descripción detallada *</label>
+            <textarea
+              id="report-desc"
+              placeholder="Describe el problema: ¿Desde cuándo ocurre? ¿A cuántas personas afecta? ¿Se han reportado accidentes?"
+            ></textarea>
+          </div>
+
+          <!-- UBICACION -->
+          <div class="form-group">
+            <label>Ubicación exacta *</label>
+            <input
+              type="text"
+              id="report-location"
+              placeholder="Calle, Barrio, Municipio, Departamento"
+            />
+          </div>
+
+          <!-- NOMBRE -->
+          <div class="form-group">
+            <label>Tu nombre (opcional)</label>
+            <input
+              type="text"
+              id="report-name"
+              placeholder="Su nombre completo"
+            />
+          </div>
+        </div>
+
+        <div class="wrapper-content">
+          <!-- SEVERIDAD -->
+          <div class="form-group">
+            <label>Nivel de urgencia *</label>
+            <div class="severity-picker">
+              <button class="sev-btn" onclick="selectSev(this, 'low')">
+                <span class="sev-icon">🟢 Baja </span>
+              </button>
+              <button
+                class="sev-btn sel-medium"
+                onclick="selectSev(this, 'medium')"
+              >
+                <span class="sev-icon">🟡 Meida </span>
+              </button>
+              <button class="sev-btn" onclick="selectSev(this, 'high')">
+                <span class="sev-icon">🔴 Urgente </span>
+              </button>
+            </div>
+            <input type="hidden" id="selected-sev" value="medium" />
+          </div>
+
+          <!-- EVIDENCIAS -->
+          <div class="form-group">
+            <label>Evidencias (fotos y videos)</label>
+            <div class="drop-zone" id="drop-zone">
+              <input
+                type="file"
+                id="file-input"
+                multiple
+                accept="image/*,video/*"
+                onchange="handleFiles(this.files)"
+              />
+              <div class="drop-icon">📎</div>
+              <div class="drop-text">Arrastra fotos o videos aquí</div>
+              <div class="drop-hint">
+                JPG, PNG, MP4, MOV — Máx. 50MB por archivo
+              </div>
+            </div>
+            <div class="media-preview" id="media-preview"></div>
+          </div>
+
+          <!-- CONTACTO -->
+          <div class="form-group">
+            <label>Correo electrónico (para seguimiento)</label>
+            <input
+              type="email"
+              id="report-email"
+              placeholder="tucorreo@ejemplo.com"
+            />
+          </div>
+
+          <div class="form-footer">
+            <label class="anon-check">
+              <input type="checkbox" id="anon-check" />
+              Publicar de forma anónima
+            </label>
+            <button class="btn-submit" onclick="submitReport()">
+              ENVIAR DENUNCIA →
+            </button>
+          </div>
+
+          <div class="success-banner" id="success-banner">
+            ✅ &nbsp; ¡Denuncia registrada con éxito! Será visible en el mapa
+            comunitario.
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- MAP SECTION -->
+<section class="section" id="map-section" style="display: block">
+  <div class="section-label">MAPA DE DENUNCIAS</div>
+  <div class="section-title" style="color: var(--paper)">
+    Dónde están los problemas
+  </div>
+
+  <!-- CONTENEDOR REAL DEL MAPA -->
+  <div id="map"></div>
+</section>
+
+    <!-- HOW IT WORKS -->
+
+    <section class="section" id="how-section" style="display: none">
+      <div class="section-label">PROCESO</div>
+      <div class="section-title">Cómo funciona VozPueblo</div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-icon">📸</div>
+          <div class="step-title">Documenta el problema</div>
+          <div class="step-desc">
+            Toma fotos o videos del problema. La evidencia visual es la
+            herramienta más poderosa para exigir respuestas.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-icon">📝</div>
+          <div class="step-title">Llena el formulario</div>
+          <div class="step-desc">
+            Describe el problema, la ubicación exacta y la urgencia. Puedes
+            publicar de forma anónima si lo prefieres.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-icon">🗣️</div>
+          <div class="step-title">La comunidad respalda</div>
+          <div class="step-desc">
+            Otros vecinos pueden votar y comentar tu denuncia. Más votos = más
+            presión a las autoridades.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-icon">✅</div>
+          <div class="step-title">Se da seguimiento</div>
+          <div class="step-desc">
+            Las denuncias con mayor impacto son escaladas a medios y
+            autoridades. Recibirás notificaciones del estado.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>
+      <div class="footer-brand">
+        <div class="logo-name">
+          Voz<span style="color: var(--red)">Pueblo</span>
+        </div>
+        <p>
+          Plataforma ciudadana independiente para documentar y visibilizar los
+          problemas de nuestras comunidades.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h5>Navegar</h5>
+        <a onclick="showSection('feed')">Ver Denuncias</a>
+        <a onclick="showSection('form')">Hacer Denuncia</a>
+        <a onclick="showSection('map')">Mapa de Problemas</a>
+        <a onclick="showSection('how')">Cómo Funciona</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Aviso de privacidad</a>
+        <a href="#">Términos de uso</a>
+        <a href="#">Política de contenido</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 VozPueblo — Todos los derechos reservados</span>
+        <span>Hecho con ❤️ por y para ti</span>
+      </div>
+    </footer>
+
+    <!-- MODAL -->
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" id="modal">
+        <div class="modal-header">
+          <h3 id="modal-title">Título del reporte</h3>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-media" id="modal-media"></div>
+          <div class="modal-meta" id="modal-meta"></div>
+          <div class="modal-desc" id="modal-desc"></div>
+          <div class="status-timeline">
+            <h4>Estado del reporte</h4>
+            <div class="timeline-item">
+              <div class="tl-dot tl-done"></div>
+              <div class="tl-text">
+                <strong>Denuncia recibida</strong
+                ><span>Registrada en el sistema</span>
+              </div>
+            </div>
+            <div class="timeline-item" id="tl-review">
+              <div class="tl-dot tl-pending"></div>
+              <div class="tl-text">
+                <strong>En revisión</strong
+                ><span>Siendo verificada por moderadores</span>
+              </div>
+            </div>
+            <div class="timeline-item" id="tl-escalated">
+              <div class="tl-dot tl-pending"></div>
+              <div class="tl-text">
+                <strong>Escalada a autoridades</strong><span>Pendiente</span>
+              </div>
+            </div>
+            <div class="timeline-item" id="tl-resolved">
+              <div class="tl-dot tl-pending"></div>
+              <div class="tl-text">
+                <strong>Problema resuelto</strong><span>Pendiente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
+</html>
